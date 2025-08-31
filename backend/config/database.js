@@ -11,9 +11,9 @@ const sequelize = new Sequelize(
     dialect: 'postgres',
     logging: config.server.env === 'development' ? console.log : false,
     pool: {
-      max: 5,
-      min: 0,
-      acquire: 30000,
+      max: 20,
+      min: 5,
+      acquire: 60000,
       idle: 10000
     }
   }

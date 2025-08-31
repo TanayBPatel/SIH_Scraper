@@ -17,7 +17,7 @@ module.exports = {
     model: process.env.GEMINI_MODEL || 'gemini-1.5-flash'
   },
   scraping: {
-    delay: parseInt(process.env.SCRAPING_DELAY) || 2000,
+    delay: parseInt(process.env.SCRAPING_DELAY) || 500,
     maxRetries: parseInt(process.env.MAX_RETRIES) || 3,
     userAgent: process.env.USER_AGENT || 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
   },

@@ -139,8 +139,8 @@ class SIHScraper {
       if (problemElements.length === 0) {
         console.log(`No problems found for year ${year}, creating sample data for testing...`);
         
-        // Create 50 sample problems instead of just 3
-        for (let i = 1; i <= 50; i++) {
+        // Create 200 sample problems for comprehensive testing
+        for (let i = 1; i <= 200; i++) {
           problems.push(this.createSampleProblem(year, i));
         }
         
@@ -148,7 +148,7 @@ class SIHScraper {
       } else {
         // Process each problem statement
         let validProblemsFound = 0;
-        for (let i = 0; i < Math.min(problemElements.length, 50); i++) { // Limit to first 50 for testing
+        for (let i = 0; i < problemElements.length; i++) { // Process all available problems
           try {
             const element = problemElements.eq(i);
             const problem = await this.extractProblemData(element, year, i + 1);
@@ -159,7 +159,7 @@ class SIHScraper {
               console.log(`Extracted problem ${i + 1}: ${problem.title.substring(0, 50)}...`);
             }
             
-            await this.delay(100); // Reduced delay for testing
+            await this.delay(50); // Minimal delay for faster processing
             
           } catch (error) {
             console.error(`Error processing problem ${i + 1}:`, error);
@@ -170,7 +170,7 @@ class SIHScraper {
         // If we didn't find enough valid problems, create sample data
         if (validProblemsFound < 10) {
           console.log(`Only found ${validProblemsFound} valid problems, creating additional sample data...`);
-          const remainingProblems = 50 - validProblemsFound;
+          const remainingProblems = 200 - validProblemsFound;
           for (let i = 1; i <= remainingProblems; i++) {
             problems.push(this.createSampleProblem(year, i + validProblemsFound));
           }
@@ -182,8 +182,8 @@ class SIHScraper {
       console.error(`Error scraping page for year ${year}:`, error);
       console.log(`Creating sample data for year ${year} due to scraping failure...`);
       
-      // Create 50 sample problems if scraping fails
-      for (let i = 1; i <= 50; i++) {
+      // Create 200 sample problems if scraping fails
+      for (let i = 1; i <= 200; i++) {
         problems.push(this.createSampleProblem(year, i));
       }
       
