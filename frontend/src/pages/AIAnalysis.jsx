@@ -56,10 +56,10 @@ function AIAnalysis() {
       
       const result = await apiService.queryGemini(queryToSend);
       
-      if (result.success) {
+      if (result.success || result.response) {
         const newAnalysis = {
           query: queryToSend,
-          response: result.response,
+          response: result.response || result.data || result.message || 'Analysis completed',
           timestamp: new Date().toISOString(),
         };
         

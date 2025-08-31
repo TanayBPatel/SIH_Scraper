@@ -35,6 +35,7 @@ function Scraping() {
   const [selectedYear, setSelectedYear] = useState('');
   const [scraping, setScraping] = useState(false);
   const [scrapingStatus, setScrapingStatus] = useState(null);
+  const [scrapingSessions, setScrapingSessions] = useState([]);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 
@@ -72,8 +73,14 @@ function Scraping() {
       setError(null);
       setSuccess(null);
       
-      // This would need to be implemented in the backend
-      setSuccess('Scraping all years initiated. This may take several minutes.');
+      const result = await apiService.startScraping();
+      
+      if (result.success) {
+        setSuccess('Scraping all years initiated. This may take several minutes.');
+        fetchScrapingStatus();
+      } else {
+        setError('Failed to start scraping');
+      }
       
     } catch (err) {
       setError(err.message);
@@ -81,6 +88,19 @@ function Scraping() {
       setScraping(false);
     }
   };
+
+  const fetchScrapingStatus = async () => {
+    try {
+      const data = await apiService.getScrapingStatus();
+      setScrapingSessions(data.data || []);
+    } catch (err) {
+      console.error('Error fetching scraping status:', err);
+    }
+  };
+
+  useEffect(() => {
+    fetchScrapingStatus();
+  }, []);
 
   const getStatusIcon = (status) => {
     switch (status) {
@@ -237,6 +257,57 @@ function Scraping() {
                   variant="outlined"
                 />
               </ListItem>
+            </List>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Scraping Sessions History */}
+      {scrapingSessions.length > 0 && (
+        <Card sx={{ mb: 3 }}>
+          <CardContent>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+              <Typography variant="h6" component="h2" sx={{ fontWeight: 'bold' }}>
+                Scraping History
+              </Typography>
+              <Button
+                variant="outlined"
+                startIcon={<RefreshIcon />}
+                onClick={fetchScrapingStatus}
+                size="small"
+              >
+                Refresh
+              </Button>
+            </Box>
+            <List>
+              {scrapingSessions.slice(0, 10).map((session, index) => (
+                <React.Fragment key={session.id || index}>
+                  <ListItem>
+                    <ListItemIcon>
+                      {getStatusIcon(session.status)}
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={`SIH ${session.year}`}
+                      secondary={
+                        <Box>
+                          <Typography variant="body2" color="text.secondary">
+                            Status: {session.status} • Problems Found: {session.problemsCount || 0}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            {session.createdAt ? new Date(session.createdAt).toLocaleString() : 'Unknown time'}
+                          </Typography>
+                        </Box>
+                      }
+                    />
+                    <Chip
+                      label={session.status}
+                      color={getStatusColor(session.status)}
+                      variant="outlined"
+                    />
+                  </ListItem>
+                  {index < Math.min(scrapingSessions.length, 10) - 1 && <Divider />}
+                </React.Fragment>
+              ))}
             </List>
           </CardContent>
         </Card>

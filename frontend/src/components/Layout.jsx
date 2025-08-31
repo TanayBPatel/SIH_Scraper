@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Drawer,
@@ -23,8 +23,12 @@ import {
   Download as DownloadIcon,
   ScatterPlot as ScrapingIcon,
   SmartToy as AIIcon,
+  CheckCircle as CheckCircleIcon,
+  Error as ErrorIcon,
+  PlayArrow as TestIcon,
 } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { apiService } from '../services/apiService';
 
 const drawerWidth = 280;
 
@@ -35,14 +39,32 @@ const menuItems = [
   { text: 'Exports', icon: <DownloadIcon />, path: '/exports' },
   { text: 'Data Scraping', icon: <ScrapingIcon />, path: '/scraping' },
   { text: 'AI Analysis', icon: <AIIcon />, path: '/ai-analysis' },
+  { text: 'Test Endpoints', icon: <TestIcon />, path: '/test' },
 ];
 
 function Layout({ children }) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [apiStatus, setApiStatus] = useState('checking');
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    const checkApiHealth = async () => {
+      try {
+        await apiService.getHealth();
+        setApiStatus('healthy');
+      } catch (error) {
+        setApiStatus('error');
+      }
+    };
+
+    checkApiHealth();
+    const interval = setInterval(checkApiHealth, 30000); // Check every 30 seconds
+
+    return () => clearInterval(interval);
+  }, []);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -126,6 +148,16 @@ function Layout({ children }) {
           <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
             {menuItems.find(item => item.path === location.pathname)?.text || 'Dashboard'}
           </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            {apiStatus === 'healthy' ? (
+              <CheckCircleIcon color="success" fontSize="small" />
+            ) : apiStatus === 'error' ? (
+              <ErrorIcon color="error" fontSize="small" />
+            ) : null}
+            <Typography variant="caption" color="text.secondary">
+              API {apiStatus === 'healthy' ? 'Online' : apiStatus === 'error' ? 'Offline' : 'Checking...'}
+            </Typography>
+          </Box>
         </Toolbar>
       </AppBar>
 

@@ -26,6 +26,7 @@ import {
   CalendarToday as CalendarIcon,
   Storage as StorageIcon,
   CheckCircle as CheckCircleIcon,
+  Refresh as RefreshIcon,
 } from '@mui/icons-material';
 import { apiService } from '../services/apiService';
 
@@ -45,7 +46,7 @@ function Exports() {
     try {
       setLoading(true);
       const data = await apiService.getExportFiles();
-      setExportFiles(data.data || []);
+      setExportFiles(data.data || data || []);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -136,9 +137,19 @@ function Exports() {
 
   return (
     <Box>
-      <Typography variant="h4" component="h1" sx={{ mb: 4, fontWeight: 'bold' }}>
-        Data Exports
-      </Typography>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
+        <Typography variant="h4" component="h1" sx={{ fontWeight: 'bold' }}>
+          Data Exports
+        </Typography>
+        <Button
+          variant="outlined"
+          startIcon={<RefreshIcon />}
+          onClick={fetchExportFiles}
+          disabled={loading}
+        >
+          Refresh Files
+        </Button>
+      </Box>
 
       {error && (
         <Alert severity="error" sx={{ mb: 2 }}>

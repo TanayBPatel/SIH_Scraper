@@ -27,6 +27,9 @@ import {
   Area,
   AreaChart,
 } from 'recharts';
+import {
+  Refresh as RefreshIcon,
+} from '@mui/icons-material';
 import { apiService } from '../services/apiService';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#82CA9D'];
@@ -50,8 +53,8 @@ function Analytics() {
         apiService.getAnalyticsTrends(),
       ]);
       
-      setFrequencyData(freqData);
-      setTrendsData(trendsData);
+      setFrequencyData(freqData.data || freqData);
+      setTrendsData(trendsData.data || trendsData);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -81,9 +84,19 @@ function Analytics() {
 
   return (
     <Box>
-      <Typography variant="h4" component="h1" sx={{ mb: 4, fontWeight: 'bold' }}>
-        Analytics & Insights
-      </Typography>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
+        <Typography variant="h4" component="h1" sx={{ fontWeight: 'bold' }}>
+          Analytics & Insights
+        </Typography>
+        <Button
+          variant="outlined"
+          startIcon={<RefreshIcon />}
+          onClick={fetchAnalyticsData}
+          disabled={loading}
+        >
+          Refresh Data
+        </Button>
+      </Box>
 
       <Tabs value={activeTab} onChange={handleTabChange} sx={{ mb: 3 }}>
         <Tab label="Category Analysis" />

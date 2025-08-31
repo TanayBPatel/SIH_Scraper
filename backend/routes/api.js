@@ -17,28 +17,40 @@ try {
 }
 const csvService = new SimpleCSVService();
 
-// Middleware for rate limiting
-const rateLimit = require('express-rate-limit');
-const config = require('../config/config');
+// Rate limiting disabled for development
+// const rateLimit = require('express-rate-limit');
+// const config = require('../config/config');
 
-const apiLimiter = rateLimit({
-  windowMs: config.rateLimit.windowMs, // 15 minutes
-  max: config.rateLimit.maxRequests, // limit each IP to 100 requests per windowMs
-  message: {
-    error: 'Too many requests from this IP, please try again later.'
-  },
-  standardHeaders: true,
-  legacyHeaders: false,
-});
+// const apiLimiter = rateLimit({
+//   windowMs: config.rateLimit.windowMs, // 15 minutes
+//   max: config.rateLimit.maxRequests, // limit each IP to 100 requests per windowMs
+//   message: {
+//     error: 'Too many requests from this IP, please try again later.'
+//   },
+//   standardHeaders: true,
+//   legacyHeaders: false,
+// });
 
-router.use(apiLimiter);
+// router.use(apiLimiter);
 
 // Health check endpoint
 router.get('/health', (req, res) => {
+  console.log('Health check endpoint called');
   res.json({ 
     status: 'OK', 
     timestamp: new Date().toISOString(),
-    service: 'SIH Data API'
+    service: 'SIH Data API',
+    message: 'API is working correctly'
+  });
+});
+
+// Test endpoint
+router.get('/test', (req, res) => {
+  console.log('Test endpoint called');
+  res.json({ 
+    success: true,
+    message: 'Test endpoint is working',
+    timestamp: new Date().toISOString()
   });
 });
 

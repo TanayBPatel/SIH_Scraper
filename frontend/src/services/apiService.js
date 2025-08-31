@@ -15,9 +15,11 @@ const apiClient = axios.create({
 apiClient.interceptors.request.use(
   (config) => {
     console.log(`Making ${config.method?.toUpperCase()} request to ${config.url}`);
+    console.log('Request config:', config);
     return config;
   },
   (error) => {
+    console.error('Request interceptor error:', error);
     return Promise.reject(error);
   }
 );
@@ -25,10 +27,13 @@ apiClient.interceptors.request.use(
 // Response interceptor
 apiClient.interceptors.response.use(
   (response) => {
+    console.log('Response received:', response.data);
     return response.data;
   },
   (error) => {
     console.error('API Error:', error);
+    console.error('Error response:', error.response);
+    console.error('Error request:', error.request);
     if (error.response) {
       throw new Error(error.response.data?.error || error.response.data?.message || 'API request failed');
     } else if (error.request) {
@@ -43,6 +48,11 @@ export const apiService = {
   // Health check
   async getHealth() {
     return await apiClient.get('/health');
+  },
+
+  // Test endpoint
+  async testEndpoint() {
+    return await apiClient.get('/test');
   },
 
   // Statistics
@@ -97,6 +107,15 @@ export const apiService = {
   // Scraping
   async scrapeYear(year) {
     return await apiClient.post(`/scrape/year/${year}`);
+  },
+
+  async getScrapingStatus() {
+    return await apiClient.get('/scrape/status');
+  },
+
+  async startScraping(years = null) {
+    const payload = years ? { years } : {};
+    return await apiClient.post('/scrape/start', payload);
   },
 
   // AI Analysis

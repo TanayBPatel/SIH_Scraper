@@ -135,7 +135,7 @@ function Problems() {
       setProblems(data.data || []);
       setPagination(prev => ({
         ...prev,
-        total: data.total || 0,
+        total: data.pagination?.totalRecords || data.total || 0,
       }));
     } catch (err) {
       setError(err.message);

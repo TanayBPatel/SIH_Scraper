@@ -12,6 +12,8 @@ import Analytics from './pages/Analytics';
 import Exports from './pages/Exports';
 import Scraping from './pages/Scraping';
 import AIAnalysis from './pages/AIAnalysis';
+import TestEndpoints from './pages/TestEndpoints';
+import SimpleTest from './pages/SimpleTest';
 
 // Create a modern theme
 const theme = createTheme({
@@ -83,6 +85,8 @@ function App() {
               <Route path="/exports" element={<Exports />} />
               <Route path="/scraping" element={<Scraping />} />
               <Route path="/ai-analysis" element={<AIAnalysis />} />
+              <Route path="/test" element={<TestEndpoints />} />
+              <Route path="/simple-test" element={<SimpleTest />} />
             </Routes>
           </Layout>
         </Router>
