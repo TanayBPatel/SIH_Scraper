@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:3001/api';
+const API_BASE_URL = 'https://sih-scraper.onrender.com/api';
 
 // Create axios instance with default config
 const apiClient = axios.create({
