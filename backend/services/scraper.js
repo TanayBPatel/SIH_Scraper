@@ -139,8 +139,8 @@ class SIHScraper {
       if (problemElements.length === 0) {
         console.log(`No problems found for year ${year}, creating sample data for testing...`);
         
-        // Create 200 sample problems for comprehensive testing
-        for (let i = 1; i <= 200; i++) {
+        // Create 500 sample problems for comprehensive testing
+        for (let i = 1; i <= 500; i++) {
           problems.push(this.createSampleProblem(year, i));
         }
         
@@ -170,7 +170,7 @@ class SIHScraper {
         // If we didn't find enough valid problems, create sample data
         if (validProblemsFound < 10) {
           console.log(`Only found ${validProblemsFound} valid problems, creating additional sample data...`);
-          const remainingProblems = 200 - validProblemsFound;
+          const remainingProblems = 500 - validProblemsFound;
           for (let i = 1; i <= remainingProblems; i++) {
             problems.push(this.createSampleProblem(year, i + validProblemsFound));
           }
@@ -182,8 +182,8 @@ class SIHScraper {
       console.error(`Error scraping page for year ${year}:`, error);
       console.log(`Creating sample data for year ${year} due to scraping failure...`);
       
-      // Create 200 sample problems if scraping fails
-      for (let i = 1; i <= 200; i++) {
+      // Create 500 sample problems if scraping fails
+      for (let i = 1; i <= 500; i++) {
         problems.push(this.createSampleProblem(year, i));
       }
       

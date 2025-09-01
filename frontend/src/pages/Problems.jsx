@@ -108,7 +108,7 @@ function Problems() {
   const [error, setError] = useState(null);
   const [pagination, setPagination] = useState({
     page: 1,
-    limit: 20,
+    limit: 1000, // Increased to show all problems
     total: 0,
   });
   const [filters, setFilters] = useState({

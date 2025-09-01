@@ -59,7 +59,7 @@ router.get('/problems', async (req, res) => {
   try {
     const { 
       page = 1, 
-      limit = 100, 
+      limit = 1000, // Increased default limit to show more problems
       year, 
       category, 
       organization, 
